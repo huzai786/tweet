@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container w-50 mt-5">
+    <div class="container border border-black ">
+        <div class="col-md-12"></div>
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form |crispy }}
+            <input type="submit" value="Confirm" class="btn btn-primary mb-2">
+        </form>
+    </div>
+</div>
+
+{% endblock content %}

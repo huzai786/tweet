@@ -1,0 +1,35 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container w-50 mt-5">
+    <div class="container border border-black ">
+
+        <div class="col-md-12">
+            <hr>
+            <form action="{% url 'three_btns' %}" method="post">
+                {% csrf_token %}
+                <button class="btn btn-outline-primary " name="download_tweet">Download Tweet data</button>
+                <button class="btn btn-outline-danger float-right" name="get_cookie">Get/Update Cookie</button>
+            </form>
+        </div>
+        <hr>
+        <h5 class="">Interval between events: </h5><span><p> {{ conf.duration }} Minutes</p></span>
+        <hr>
+        <h5>Schedule till: </h5><span><p>{{ conf.schedule_till }} Days</p></span>
+        <hr>
+        <h5>Add random emoji: </h5><span><p>{{ conf.add_random_emoji }}</p></span>
+        <hr>
+        <h5>No of Emoji: </h5><span><p>{{ conf.no_of_emoji }}</p></span>
+        <hr>
+        <h5>Add Random Number: </h5><span><p>{{ conf.add_random_number }}</p></span>
+        <hr>
+        <h5>add current date: </h5><span><p>{{ conf.add_current_date }}</p></span>
+        <hr>
+        <h5>add quotes: </h5><span><p>{{ conf.add_quotes }}</p></span>
+        <hr>              
+        <a href="{% url 'edit_conf' %}" class="btn btn-primary mt-2 mb-2">Edit Settings</a>
+    </div>
+</div>
+
+{% endblock content %}

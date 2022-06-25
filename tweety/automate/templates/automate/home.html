@@ -1,0 +1,48 @@
+{% extends 'main.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<style>
+body{
+    background-color: rgb(204, 236, 255);
+}
+.i{
+    box-shadow: 2px 2px 10px grey;
+    background-color: rgb(227, 237, 255);
+}
+</style>
+<div class="container i">
+<div class="h2 ml-5 mt-5 pt-5">Twitter bot</div>
+<div class="container">
+    
+
+</div>
+<form method="post" action="" class="m-5" enctype="multipart/form-data">
+    <hr>
+    {% csrf_token %}
+    {{ form|crispy }}
+    <hr>
+    <button type="submit" class="btn btn-outline-primary mb-3">Add Tweet</button>
+</form>
+</div>
+
+<div class="row mt-4"></div>
+<hr>
+{% for tweet in tweets %}
+<div class="container">
+    <div class="row">
+    <div class="col">
+        {{ tweet.tweet }}
+    </div>
+    <div class="col">
+        {{ tweet.my_PRF_image }}
+    </div>
+    <div class="col">
+        <a href="{% url 'edit_tweet' tweet.id %}" class="btn btn-primary float-right ml-4">Edit</a>
+        <a href="{% url 'delete_tweet' tweet.id %}" class="btn btn-danger float-right">Delete</a>
+    </div>
+    </div>
+</div>
+<hr>
+{% endfor %}
+
+{% endblock content %}
