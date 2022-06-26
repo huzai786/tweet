@@ -13,6 +13,7 @@ from rich.traceback import install
 from rich.prompt import Prompt
 from rich.padding import Padding
 from rich.progress import track
+
 install()
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tweety.settings')
 django.setup()
@@ -32,25 +33,22 @@ def start_script():
     print()
     interval = Prompt.ask("[bold italic underline red blink]Interval between tweets (minutes)[/bold italic underline red blink]",
                           choices=['5', '10', '15', '20', '25', '30'])
-    time.sleep(0.5)
     Schedule_till = Prompt.ask("[bold italic underline red blink]Schedule till (months)[/bold italic underline red blink]",
                                choices=['1', '3', '6', '8', '12'])
-    time.sleep(0.5)
-    Add_emoji = Prompt.ask("[bold italic underline red blink]Add random emoji[/bold italic underline red blink]",
-                           choices=['yes', 'no'])
-    time.sleep(0.5)
-    if Add_emoji.lower() == 'yes':
+    Add_emoji = Prompt.ask("[bold italic underline red blink]Add random emoji (y for yes, n for no)[/bold italic underline red blink]",
+                           choices=['y', 'n'])
+    if Add_emoji.lower() == 'y':
         no_of_emoji = Prompt.ask(
             "[bold italic underline red blink]Number of emojis [/bold italic underline red blink]", choices=['3', '4', '5', '6', '7', '8'], default=4)
     else:
         no_of_emoji = None
     random_character = Prompt.ask("[bold italic underline red blink]Add random character [/bold italic underline red blink]",
-                                  choices=["yes", 'no'])
+                                  choices=["y", 'n'])
     Add_current_date = Prompt.ask("[bold italic underline red blink]Add current date [/bold italic underline red blink]",
-                                  choices=["yes", 'no'])
+                                  choices=["y", 'n'])
     add_quotes = Prompt.ask("[bold italic underline red blink]Add quotes[/bold italic underline red blink]",
-                            choices=['yes', 'no'])
-    print()
+                            choices=['y', 'n'])
+    print('========================================================================================================')
     if Add_emoji == 'yes':
         add_random_emoji = True
     else:
@@ -83,13 +81,13 @@ def start_script():
         for i, v in enumerate(lines):
             gmail, username, password = v.split(':')
             console.log(
-                f'Account number {i}\n gmail: {gmail}\nusername: {username}', style="bold green", highlight=True)
+                f'Account number {i + 1}\n gmail: {gmail}\nusername: {username}', style="bold green", highlight=True)
             console.log('------------------------------------------')
             bot = TweetAutomation(driver, gmail, username, password)
             bot.login_and_credentials_process()
             bot.page_setup()
             bot.tweet_automation(tweets, int(interval), int(Schedule_till), add_random_emoji,
-                                 no_of_emoji, add_random_number, add_current_date, add_quotes)
+                                 int(no_of_emoji), add_random_number, add_current_date, add_quotes)
 
 
 if __name__ == '__main__':
