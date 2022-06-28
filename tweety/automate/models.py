@@ -17,7 +17,7 @@ schedule_duration = (
 )
 
 class Tweets(models.Model):
-    tweet = models.TextField(max_length=150, blank=True, null=False)
+    tweet = models.TextField(max_length=120, blank=True, null=False)
     img = models.ImageField(null=True, blank=True, upload_to='images')
     
     def __str__(self):

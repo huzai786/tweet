@@ -47,6 +47,7 @@ class TweetAutomation(object):
         username_field = WebDriverWait(self.driver, 10).until(
             EC.visibility_of_element_located((By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[2]/label/div/div[2]/div/input')))
         if username_field.is_displayed():
+            print('username_field displayed')
             username_field.click()
             username_field.send_keys(self.username)
             time.sleep(3)
@@ -58,11 +59,9 @@ class TweetAutomation(object):
         pass_field = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, ' //*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[3]/div/label/div/div[2]/div[1]/input')))
         pass_field.click()
+        time.sleep(5)
         pass_field.send_keys(self.password)
         self.driver.implicitly_wait(10)
-
-
-
 
     def page_setup(self):
         try:
@@ -173,7 +172,10 @@ class TweetAutomation(object):
                 add_random_emoji, no_of_emoji, add_random_number, add_current_date, add_quotes)
             tweet_msg = f"""{random_tweet_instance.get('tweet')}\n{msg}"""
             if len(tweet_msg) > 250:
-                tweet_msg = '\n'.join(tweet_msg.split('\n')[:-1])
+                msg = add_tweet_variables(
+                    add_random_emoji, no_of_emoji, add_random_number, add_current_date, False)
+                tweet_msg = f'{random_tweet_instance}\n{msg}'
+                print(tweet_msg)
             if random_tweet_instance.get('img') != 'No image':
                 send_img_btn = self.driver.find_element(
                     By.XPATH, '/html/body/div[3]/div[2]/div[1]/div/div/div/div/div/button')

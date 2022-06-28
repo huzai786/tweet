@@ -1,4 +1,3 @@
-
 import os
 import time
 import django
@@ -13,11 +12,10 @@ from rich.traceback import install
 from rich.prompt import Prompt
 from rich.padding import Padding
 from rich.progress import track
-
+from threading import Thread
 install()
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tweety.settings')
 django.setup()
-
 from automate.models import Tweets
 
 tweets = [{'tweet': tweet.tweet, 'img': str(
@@ -25,6 +23,14 @@ tweets = [{'tweet': tweet.tweet, 'img': str(
 
 
 console = Console()
+
+
+def bot_instance(driver, gmail, username, password, tweets, interval, Schedule_till, add_random_emoji, no_of_emoji, add_random_number, add_current_date, add_quotes):
+    bot = TweetAutomation(driver, gmail, username, password)
+    bot.login_and_credentials_process()
+    bot.page_setup()
+    bot.tweet_automation(tweets, int(interval), int(Schedule_till), add_random_emoji,
+                         int(no_of_emoji), add_random_number, add_current_date, add_quotes)
 
 
 def start_script():
@@ -49,22 +55,22 @@ def start_script():
     add_quotes = Prompt.ask("[bold italic underline red blink]Add quotes[/bold italic underline red blink]",
                             choices=['y', 'n'])
     print('========================================================================================================')
-    if Add_emoji == 'yes':
+    if Add_emoji == 'y':
         add_random_emoji = True
     else:
         add_random_emoji = False
 
-    if random_character == 'yes':
+    if random_character == 'y':
         add_random_number = True
     else:
         add_random_number = False
 
-    if Add_current_date == 'yes':
+    if Add_current_date == 'y':
         add_current_date = True
     else:
         add_current_date = False
 
-    if add_quotes == 'yes':
+    if add_quotes == 'y':
         add_quotes = True
     else:
         dd_quotes = False
@@ -76,19 +82,22 @@ def start_script():
             lines = f.readlines()
         console.log(f'Found {len(lines)} account(s)',
                     style="bold green", highlight=True)
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-    with console.status("tweeting around...", spinner="earth"):
+    
+    with console.status("tweeting around...\n", spinner="earth"):
+        threads = []
         for i, v in enumerate(lines):
-            gmail, username, password = v.split(':')
+            username, password, gmail = v.split(':')
+            print(username, password, gmail)
             console.log(
-                f'Account number {i + 1}\n gmail: {gmail}\nusername: {username}', style="bold green", highlight=True)
+                f'Account number {i + 1}\ngmail: {gmail}\nusername: {username}', style="bold green", highlight=True)
             console.log('------------------------------------------')
-            bot = TweetAutomation(driver, gmail, username, password)
-            bot.login_and_credentials_process()
-            bot.page_setup()
-            bot.tweet_automation(tweets, int(interval), int(Schedule_till), add_random_emoji,
-                                 int(no_of_emoji), add_random_number, add_current_date, add_quotes)
-
-
+            driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+            thread = Thread(target=bot_instance, args=[driver, gmail, username, password, tweets, interval, Schedule_till, add_random_emoji, no_of_emoji, add_random_number, add_current_date, add_quotes])
+            threads.append(thread)
+        for th in threads:
+            time.sleep(5)
+            th.start()
+        for th in threads:
+            th.join()
 if __name__ == '__main__':
     start_script()
