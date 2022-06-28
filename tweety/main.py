@@ -17,7 +17,6 @@ install()
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tweety.settings')
 django.setup()
 from automate.models import Tweets
-
 tweets = [{'tweet': tweet.tweet, 'img': str(
     tweet.my_PRF_image)} for tweet in Tweets.objects.all()]
 
@@ -82,22 +81,31 @@ def start_script():
             lines = f.readlines()
         console.log(f'Found {len(lines)} account(s)',
                     style="bold green", highlight=True)
-    
+
     with console.status("tweeting around...\n", spinner="earth"):
         threads = []
+        
         for i, v in enumerate(lines):
             username, password, gmail = v.split(':')
-            print(username, password, gmail)
+            driver = webdriver.Chrome(service=Service(
+                ChromeDriverManager().install()))
             console.log(
-                f'Account number {i + 1}\ngmail: {gmail}\nusername: {username}', style="bold green", highlight=True)
+                f'Account number {i + 1}\ngmail: {gmail}username: {username}', style="bold green", highlight=True)
             console.log('------------------------------------------')
-            driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
-            thread = Thread(target=bot_instance, args=[driver, gmail, username, password, tweets, interval, Schedule_till, add_random_emoji, no_of_emoji, add_random_number, add_current_date, add_quotes])
+
+            # bot_instance(driver, gmail, username, password, tweets, interval, Schedule_till, add_random_emoji, no_of_emoji, add_random_number, add_current_date, add_quotes)
+            # time.sleep(20)
+            thread = Thread(target=bot_instance, args=[driver, gmail, username, password, tweets, interval,
+                            Schedule_till, add_random_emoji, no_of_emoji, add_random_number, add_current_date, add_quotes])
             threads.append(thread)
+            time.sleep(10)
+
         for th in threads:
-            time.sleep(5)
+            time.sleep(50)
             th.start()
         for th in threads:
             th.join()
+
+
 if __name__ == '__main__':
     start_script()

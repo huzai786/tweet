@@ -27,30 +27,40 @@ class TweetAutomation(object):
         self.username = username
         self.password = password
 
-    def login_and_credentials_process(self):
+    def login_and_credentials_process(self):       
         self.driver.get('https://tweetdeck.twitter.com/')
+        self.driver.implicitly_wait(100)
         login = WebDriverWait(self.driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div[3]/div/div[2]/section/div[1]/a')))
         login.click()
         self.driver.implicitly_wait(10)
-
-        email_input = WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[5]/label/div/div[2]/div/input')))
+        email_input = self.driver.find_element(By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[5]/label/div/div[2]/div/input')
+        # email_input = WebDriverWait(self.driver, 10).until(
+            # EC.presence_of_element_located((By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[5]/label/div/div[2]/div/input')))
+        # time.sleep(50)
         email_input.click()
-        email_input.send_keys(self.email)
+        time.sleep(2)
+        print(self.email)
+        email_input.send_keys(f'{self.email}')
+        
+        # self.driver.implicitly_wait(10)
+        # email_next = self.driver.find_element(By.XPATH, '/html/body/div[1]/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[6]')
+        # email_next = WebDriverWait(self.driver, 10).until(
+            # EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[6]')))
+        # email_next.click()
 
         self.driver.implicitly_wait(10)
-        email_next = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[6]')))
-        email_next.click()
-        self.driver.implicitly_wait(10)
-        username_field = WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[2]/label/div/div[2]/div/input')))
+        print('---------------------')
+        username_field = self.driver.find_element(By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[2]/label/div/div[2]/div/input')
+        
+        # username_field = WebDriverWait(self.driver, 10).until(
+            # EC.visibility_of_element_located((By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[2]/label/div/div[2]/div/input')))
+        
         if username_field.is_displayed():
             print('username_field displayed')
             username_field.click()
             username_field.send_keys(self.username)
-            time.sleep(3)
+            time.sleep(1)
             username_next = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div/div/div')))
             username_next.click()
@@ -59,9 +69,11 @@ class TweetAutomation(object):
         pass_field = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.XPATH, ' //*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div/div[3]/div/label/div/div[2]/div[1]/input')))
         pass_field.click()
-        time.sleep(5)
         pass_field.send_keys(self.password)
         self.driver.implicitly_wait(10)
+        login_btn = self.driver.find_element(By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div[1]/div/div/div')
+        self.driver.implicitly_wait(10)
+        login_btn.click()
 
     def page_setup(self):
         try:
