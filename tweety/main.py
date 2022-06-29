@@ -92,16 +92,12 @@ def start_script():
             console.log(
                 f'Account number {i + 1}\ngmail: {gmail}username: {username}', style="bold green", highlight=True)
             console.log('------------------------------------------')
-
             # bot_instance(driver, gmail, username, password, tweets, interval, Schedule_till, add_random_emoji, no_of_emoji, add_random_number, add_current_date, add_quotes)
-            # time.sleep(20)
             thread = Thread(target=bot_instance, args=[driver, gmail, username, password, tweets, interval,
                             Schedule_till, add_random_emoji, no_of_emoji, add_random_number, add_current_date, add_quotes])
             threads.append(thread)
-            time.sleep(10)
 
         for th in threads:
-            time.sleep(50)
             th.start()
         for th in threads:
             th.join()
