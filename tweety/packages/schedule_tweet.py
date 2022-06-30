@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from packages.utils import add_tweet_variables
+from packages.utils import add_tweet_variables, check_exists_by_xpath
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
@@ -34,35 +34,14 @@ class TweetAutomation(object):
             EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div[3]/div/div[2]/section/div[1]/a')))
         login.click()
         self.driver.implicitly_wait(10)
+        time.sleep(3)
         email_input = self.driver.find_element(By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[5]/label/div/div[2]/div/input')
-        # email_input = WebDriverWait(self.driver, 10).until(
-            # EC.presence_of_element_located((By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[5]/label/div/div[2]/div/input')))
-        # time.sleep(50)
         email_input.click()
         time.sleep(2)
-        # print(self.email)
         email_input.send_keys(f'{self.username}')
         email_input.send_keys(Keys.ENTER)
         self.driver.implicitly_wait(10)
-        # email_next = self.driver.find_element(By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[6]')
-        # email_next = WebDriverWait(self.driver, 10).until(
-            # EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div/div/div[1]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div/div/div/div[6]')))
-        # email_next.click()
 
-        # username_field = self.driver.find_element(By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[2]/label/div/div[2]/div/input')
-        
-        # username_field = WebDriverWait(self.driver, 10).until(
-            # EC.visibility_of_element_located((By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[1]/div/div[2]/label/div/div[2]/div/input')))
-        
-        # if username_field.is_displayed():
-        #     print('username_field displayed')
-        #     username_field.click()
-        #     username_field.send_keys(self.username)
-        #     print(self.username)
-        #     time.sleep(10)
-            # username_next = WebDriverWait(self.driver, 10).until(
-                # EC.element_to_be_clickable((By.XPATH, '//*[@id="layers"]/div/div/div/div/div/div/div[2]/div[2]/div/div/div[2]/div[2]/div[2]/div/div/div/div')))
-            # username_next.click()
         
         self.driver.implicitly_wait(10)
         pass_field = WebDriverWait(self.driver, 10).until(
@@ -75,26 +54,25 @@ class TweetAutomation(object):
         login_btn.click()
 
     def page_setup(self):
-        try:
-            self.driver.maximize_window()
-            self.driver.implicitly_wait(10)
-            closed_side_panel = self.driver.find_element(
-                By.XPATH, '/html/body/div[3]/header/div/button')
-            if closed_side_panel.is_displayed():
-                closed_side_panel.click()
-                self.driver.implicitly_wait(10)
-                stay_opened_btn = self.driver.find_element(
-                    By.XPATH, '/html/body/div[3]/div[2]/div[1]/div/div/div/footer/label/input')  # Stay Open
-                self.driver.implicitly_wait(10)
+        self.driver.maximize_window()
+        self.driver.implicitly_wait(10)
+        
+        closed_side_panel = self.driver.find_element(By.XPATH, '/html/body/div[3]/header/div/button')
+        if not closed_side_panel.is_enabled():
 
-                if not stay_opened_btn.is_selected():
-                    stay_opened_btn.click()
-                    time.sleep(2)
-                    text_box = self.driver.find_element(
-                        By.XPATH, '/html/body/div[3]/div[2]/div[1]/div/div/div/div/div/div[7]/textarea').click()
+            closed_side_panel.click()
+            print('closed side panel click')
+        self.driver.implicitly_wait(10)
+        stay_opened_btn = self.driver.find_element(
+            By.XPATH, '/html/body/div[3]/div[2]/div[1]/div/div/div/footer/label/input')
+        self.driver.implicitly_wait(10)
 
-        except Exception as e:
-            print('(2)Error: ', e)
+        if not stay_opened_btn.is_selected():
+            stay_opened_btn.click()
+            time.sleep(2)
+            text_box = self.driver.find_element(
+                By.XPATH, '/html/body/div[3]/div[2]/div[1]/div/div/div/div/div/div[7]/textarea').click()
+
 
     def pick_date(self, date, month, year):
         month_status = WebDriverWait(self.driver, 10).until(
@@ -168,13 +146,16 @@ class TweetAutomation(object):
                 ampm_btn.click()
 
     def tweet_automation(self, tweets, interval, schedule_till, add_random_emoji, no_of_emoji, add_random_number, add_current_date, add_quotes):
+        # if os.path.get(f'{self.username}_state.pkl'):
+            # with open(f'{self.username}_state.pkl', 'rb') as f:
+                # pickle.load()
         start_time = datetime.now()
         schedule_till = schedule_till * 30
         end_time = start_time + timedelta(days=schedule_till)
         try:   
             while True:
                 if start_time > end_time:
-                    break
+                    break  
                 start_time += timedelta(minutes=interval)
                 increased_datetime = start_time.strftime(
                     '%#d-%B-%Y-%#I-%M-%p').split('-')
@@ -183,10 +164,10 @@ class TweetAutomation(object):
                 msg = add_tweet_variables(
                     add_random_emoji, no_of_emoji, add_random_number, add_current_date, add_quotes)
                 tweet_msg = f"""{random_tweet_instance.get('tweet')}\n{msg}"""
-                if len(tweet_msg) > 250:
+                if len(tweet_msg) > 279:
                     msg = add_tweet_variables(
                         add_random_emoji, no_of_emoji, add_random_number, add_current_date, False)
-                    tweet_msg = f'{random_tweet_instance}\n{msg}'
+                    tweet_msg = f'{random_tweet_instance.get("tweet")}\n{msg}'
                     print(tweet_msg)
                 if random_tweet_instance.get('img') != 'No image':
                     send_img_btn = self.driver.find_element(
@@ -215,5 +196,7 @@ class TweetAutomation(object):
                 self.driver.implicitly_wait(10)
                 time.sleep(1)
             
-        except Exception as e: 
+        except Exception as e:
             print(e)
+            # with open(f'{self.username}_state.pkl', 'wb') as f:
+                # pickle.dump(start_time, f)

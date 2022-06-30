@@ -5,16 +5,23 @@ import time
 from datetime import datetime
 import pickle
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-
+from selenium.common.exceptions import NoSuchElementException
 
 
 l = ['🥶', '😱', '😨', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦',
         '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '😉',
         '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨']
 
-
+        
+def check_exists_by_xpath(driver ,xpath):
+    try:
+        driver.find_element(By.XPATH, xpath)
+    except NoSuchElementException:
+        return False
+    return True
 
 def return_emoji(no_of_emoji):
     return ''.join(random.sample(l, no_of_emoji))

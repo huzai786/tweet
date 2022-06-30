@@ -46,7 +46,8 @@ def start_script():
         no_of_emoji = Prompt.ask(
             "[bold italic underline red blink]Number of emojis [/bold italic underline red blink]", choices=['3', '4', '5', '6', '7', '8'], default=4)
     else:
-        no_of_emoji = None
+        no_of_emoji = 0
+    
     random_character = Prompt.ask("[bold italic underline red blink]Add random character [/bold italic underline red blink]",
                                   choices=["y", 'n'])
     Add_current_date = Prompt.ask("[bold italic underline red blink]Add current date [/bold italic underline red blink]",
@@ -92,7 +93,6 @@ def start_script():
             console.log(
                 f'Account number {i + 1}\ngmail: {gmail}username: {username}', style="bold green", highlight=True)
             console.log('------------------------------------------')
-            # bot_instance(driver, gmail, username, password, tweets, interval, Schedule_till, add_random_emoji, no_of_emoji, add_random_number, add_current_date, add_quotes)
             thread = Thread(target=bot_instance, args=[driver, gmail, username, password, tweets, interval,
                             Schedule_till, add_random_emoji, no_of_emoji, add_random_number, add_current_date, add_quotes])
             threads.append(thread)
