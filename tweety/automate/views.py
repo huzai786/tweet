@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect, HttpResponse
-from automate.models import Tweets, Configr
+from automate.models import Tweets
 from automate.forms import ConfForm, TweetForm
 from get_tweet import get_tweet_data
 import os
-from packages.utils import store_cookies
 
 
 def home(request):
@@ -37,33 +36,3 @@ def edit_tweet(request, id):
     
     ctx = {'form': form}
     return render(request, 'automate/edit_tweet.html', ctx)
-
-def config(request):
-    conf = Configr.objects.all()[0]
-    ctx ={'conf': conf}
-    return render(request, 'automate/conf.html', ctx)
-
-
-def edit_conf(request):
-    conf = Configr.objects.all()[0]
-    form = ConfForm()
-    if request.method == 'POST':
-        form = ConfForm(request.POST, instance=conf)
-        if form.is_valid():
-            form.save()
-            return redirect('conf')
-    return render(request, 'automate/edit_conf.html', {'form':form})
-
-
-def three_btns(request):
-    if 'download_tweet' in request.POST:
-        path = get_tweet_data()
-        os.system(f'notepad.exe {path}')
-        print('download tweets')
-
-    if 'get_cookie' in request.POST:
-        store_cookies()
-        print('get cookie')
-        
-    return HttpResponse('<html><script>window.location.replace("/config/");</script></html>')
-

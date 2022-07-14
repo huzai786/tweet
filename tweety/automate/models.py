@@ -47,3 +47,9 @@ class Configr(models.Model):
     
     class Meta:
         verbose_name_plural = 'bot configuration'
+        
+class Quotes(models.Model):
+    quote = models.TextField(null=True, blank=True, max_length=300, unique=True)
+    
+    def __str__(self):
+        return str(self.quote)

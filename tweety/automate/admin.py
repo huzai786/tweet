@@ -1,10 +1,12 @@
 from django.contrib import admin
-from automate.models import Tweets, Configr
+from automate.models import Tweets, Configr, Quotes
 from django.contrib.auth.models import Group, User
 
 
 admin.site.register(Tweets)
 admin.site.register(Configr)
+admin.site.register(Quotes)
+
 admin.site.unregister(Group)
 admin.site.unregister(User)
 
