@@ -1,0 +1,1 @@
+from get_quotes import get_quote

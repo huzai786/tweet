@@ -164,17 +164,16 @@ class TweetAutomation(object):
                 msg = add_tweet_variables(
                     add_random_emoji, no_of_emoji, add_random_number, add_current_date, add_quotes)
                 tweet_msg = f"""{random_tweet_instance.get('tweet')}\n{msg}"""
-                if len(tweet_msg) > 279:
+                if len(tweet_msg) > 265:
                     msg = add_tweet_variables(
                         add_random_emoji, no_of_emoji, add_random_number, add_current_date, False)
                     tweet_msg = f'{random_tweet_instance.get("tweet")}\n{msg}'
-                    print(tweet_msg)
                 if random_tweet_instance.get('img') != 'No image':
                     send_img_btn = self.driver.find_element(
                         By.XPATH, '/html/body/div[3]/div[2]/div[1]/div/div/div/div/div/button')
                     if send_img_btn.is_displayed():
                         send_img_btn.click()
-                    time.sleep(1)
+                    time.sleep(2)
                     pyautogui.write(random_tweet_instance.get('img'))
                     pyautogui.press('enter')
                 self.driver.implicitly_wait(10)
@@ -194,9 +193,8 @@ class TweetAutomation(object):
                 if send_tweet_btn.is_enabled():
                     send_tweet_btn.click()
                 self.driver.implicitly_wait(10)
-                time.sleep(1)
+                time.sleep(2)
             
         except Exception as e:
             print(e)
-            # with open(f'{self.username}_state.pkl', 'wb') as f:
-                # pickle.dump(start_time, f)
+

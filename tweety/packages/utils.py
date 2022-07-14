@@ -11,26 +11,29 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.common.exceptions import NoSuchElementException
 import sys
-from ..get_quotes import get_quote
 
+sys.path.append('../')
+
+from get_quotes import get_quote
 
 
 l = ['🥶', '😱', '😨', '😥', '😓', '🤗', '🤔', '🤭', '🤫', '🤥', '😶', '😐', '😑', '😬', '🙄', '😯', '😦',
-        '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '😉',
-        '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨']
+     '😧', '😮', '😲', '🥱', '😴', '🤤', '😪', '😵', '🤐', '🥴', '🤢', '🤮', '🤧', '😷', '🤒', '🤕', '🤑', '😉',
+     '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨']
 
 
-def check_exists_by_xpath(driver ,xpath):
+def check_exists_by_xpath(driver, xpath):
     try:
         driver.find_element(By.XPATH, xpath)
     except NoSuchElementException:
         return False
     return True
 
+
 def return_emoji(no_of_emoji):
     return ''.join(random.sample(l, no_of_emoji))
-    
-    
+
+
 def return_random_string(size=4, chars=string.digits + string.punctuation):
     return ''.join(random.choice(chars) for _ in range(size))
 
@@ -55,6 +58,3 @@ def add_tweet_variables(add_random_emoji, no_of_emoji, add_random_number, add_cu
         if quote_msg != '':
             msg += f'"{quote_msg}"'
     return msg
-
-
-
